@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Null - Dominate Roblox</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gray: {
+              950: '#0a0a0f',
+              900: '#111118',
+              800: '#1e1e2a',
+              700: '#2d2d3d',
+              600: '#4a4a5a',
+              500: '#6b6b7b',
+              400: '#9ca3af',
+              300: '#d1d5db',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0f; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    .page { display: none; }
+    .page.active { display: block; }
+    a { text-decoration: none; color: inherit; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+    .modal-overlay.active { display: flex; }
+  </style>
+</head>
+<body>
+
+  <!-- CHECKOUT MODAL -->
+  <div id="checkout-modal" class="modal-overlay" onclick="if(event.target===this)closeCheckout()">
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 relative">
+      <button onclick="closeCheckout()" class="absolute top-4 right-4 text-gray-500 hover:text-white text-xl">&times;</button>
+      <h2 class="text-2xl font-extrabold mb-2">Checkout</h2>
+      <p id="checkout-item" class="text-gray-400 text-sm mb-1"></p>
+      <p id="checkout-price" class="text-purple-400 font-bold text-lg mb-6"></p>
+
+      <div class="space-y-3">
+        <button onclick="payWithPaypal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 01-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797H9.603c-.564 0-1.04.413-1.127.973L7.076 21.337z"/></svg>
+          Pay with PayPal
+        </button>
+        <a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          Pay with Robux (Join Discord)
+        </a>
+      </div>
+
+      <p class="text-gray-600 text-xs text-center mt-4">Robux payments are handled through our Discord server.</p>
+      <p class="text-yellow-500/80 text-xs text-center mt-2">If insufficient funds are sent, we may attempt a refund but this is not guaranteed.</p>
+    </div>
+  </div>
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b border-gray-800/50" style="background: rgba(10,10,15,0.8); backdrop-filter: blur(12px);">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="#" onclick="showPage('home'); return false;" class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center font-bold text-sm">N</div>
+          <span class="text-xl font-bold text-purple-400">Null</span>
+        </a>
+        <div class="flex items-center gap-6">
+          <a href="#features" class="text-gray-300 hover:text-white transition-colors text-sm hidden md:inline">Features</a>
+          <a href="#shop" class="text-gray-300 hover:text-white transition-colors text-sm">Shop</a>
+          <a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors">Get Started</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-40 pb-24 px-6 text-center relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent pointer-events-none"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative max-w-4xl mx-auto">
+        <div class="inline-flex items-center gap-2 bg-gray-800/60 border border-gray-700/50 rounded-full px-4 py-2 mb-8 text-sm text-gray-300">
+          <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          NOW AVAILABLE — JOIN EARLY
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
+          Dominate Competition<br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600">With Null</span>
+        </h1>
+
+        <p class="text-lg text-gray-400 max-w-xl mx-auto mb-10">
+          A new and powerful Roblox software suite. Premium scripts, configs, and tools — built from the ground up.
+        </p>
+
+        <div class="flex items-center justify-center gap-4 flex-wrap">
+          <a href="#shop" class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            Get Started Now
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+          <a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            Join Discord
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="relative max-w-4xl mx-auto mt-20 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-gray-900/60 border border-gray-800/60 rounded-xl p-6 text-center">
+          <div class="flex justify-center mb-3"><svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <div class="text-xl font-bold mb-1">Instant</div>
+          <div class="text-xs text-gray-500 tracking-widest uppercase">FAST EXECUTION</div>
+        </div>
+        <div class="bg-gray-900/60 border border-gray-800/60 rounded-xl p-6 text-center">
+          <div class="flex justify-center mb-3"><svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></div>
+          <div class="text-xl font-bold mb-1">Latest</div>
+          <div class="text-xs text-gray-500 tracking-widest uppercase">ALWAYS UPDATED</div>
+        </div>
+        <div class="bg-gray-900/60 border border-gray-800/60 rounded-xl p-6 text-center">
+          <div class="flex justify-center mb-3"><svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <div class="text-xl font-bold mb-1">24/7</div>
+          <div class="text-xs text-gray-500 tracking-widest uppercase">DISCORD SUPPORT</div>
+        </div>
+        <div class="bg-gray-900/60 border border-gray-800/60 rounded-xl p-6 text-center">
+          <div class="flex justify-center mb-3"><svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="text-xl font-bold mb-1">Protected</div>
+          <div class="text-xs text-gray-500 tracking-widest uppercase">SECURE &amp; SAFE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP SECTION -->
+    <section id="shop" class="py-24 px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <p class="text-purple-400 text-sm font-semibold tracking-widest uppercase mb-3">SHOP</p>
+          <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Our Products</h2>
+          <p class="text-gray-400 max-w-lg mx-auto">Premium configs, accounts, and boosting services. Pay with PayPal or Robux.</p>
+        </div>
+
+        <!-- Configs -->
+        <div class="mb-16">
+          <h3 class="text-2xl font-bold mb-2 flex items-center gap-2">
+            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            Configs
+          </h3>
+          <p class="text-gray-500 text-sm mb-3">Supported internals &amp; externals for top executors.</p>
+          <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg px-4 py-3 mb-6">
+            <p class="text-blue-400 text-xs font-medium flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+              Configs are only available for purchase through our <a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-300">Discord server</a>.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <!-- Internals -->
+            <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold">Internals</h4>
+                <span class="text-purple-400 text-sm font-semibold">$5 - $20</span>
+              </div>
+              <p class="text-gray-500 text-xs mb-1">Configs: Kiciahook, Unnamed Enhancements</p>
+              <p class="text-gray-600 text-xs mb-4">550 - 2,250 Robux</p>
+              <a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+                Join Discord to Purchase
+              </a>
+            </div>
+            <!-- Externals -->
+            <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold">Externals</h4>
+                <span class="text-purple-400 text-sm font-semibold">$5 - $20</span>
+              </div>
+              <p class="text-gray-500 text-xs mb-1">Configs: Matcha, Matrix</p>
+              <p class="text-gray-600 text-xs mb-4">550 - 2,250 Robux</p>
+              <a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+                Join Discord to Purchase
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accounts -->
+        <div class="mb-16">
+          <h3 class="text-2xl font-bold mb-2 flex items-center gap-2">
+            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Accounts
+          </h3>
+          <p class="text-gray-500 text-sm mb-6">Fresh and ranked-ready Roblox accounts.</p>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold">Ranked Ready</h4>
+                <span class="text-purple-400 text-sm font-semibold">$0.25 each</span>
+              </div>
+              <p class="text-gray-600 text-xs mb-4">40 Robux each</p>
+              <button onclick="openCheckout('Ranked Ready Account', '$0.25 / 40 Robux each')" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">Buy Now</button>
+            </div>
+            <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold">2 Weeks Old+</h4>
+                <span class="text-purple-400 text-sm font-semibold">$0.15 each</span>
+              </div>
+              <p class="text-gray-600 text-xs mb-4">30 Robux each</p>
+              <button onclick="openCheckout('2 Weeks Old+ Account', '$0.15 / 30 Robux each')" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">Buy Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boosting -->
+        <div>
+          <h3 class="text-2xl font-bold mb-2 flex items-center gap-2">
+            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Boosting
+          </h3>
+          <p class="text-gray-500 text-sm mb-3">Rank boosting services with optional add-ons.</p>
+          <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-4 py-3 mb-6">
+            <p class="text-yellow-400 text-xs font-medium flex items-center gap-2">
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              You must join our <a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="underline hover:text-yellow-300">Discord</a> and show proof of payment to claim your boost.
+            </p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold">Unranked &rarr; Diamond</h4>
+                <span class="text-purple-400 text-sm font-semibold">$5</span>
+              </div>
+              <p class="text-gray-600 text-xs mb-4">500 Robux</p>
+              <button onclick="openCheckout('Boosting: Unranked to Diamond', '$5 / 500 Robux')" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">Buy Now</button>
+            </div>
+            <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold">Diamond &rarr; Onyx</h4>
+                <span class="text-purple-400 text-sm font-semibold">$5</span>
+              </div>
+              <p class="text-gray-600 text-xs mb-4">500 Robux</p>
+              <button onclick="openCheckout('Boosting: Diamond to Onyx', '$5 / 500 Robux')" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">Buy Now</button>
+            </div>
+            <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold">Onyx &rarr; Nemesis</h4>
+                <span class="text-purple-400 text-sm font-semibold">$10</span>
+              </div>
+              <p class="text-gray-600 text-xs mb-4">1,000 Robux</p>
+              <button onclick="openCheckout('Boosting: Onyx to Nemesis', '$10 / 1,000 Robux')" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">Buy Now</button>
+            </div>
+            <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold">Nemesis &rarr; Arch</h4>
+                <span class="text-purple-400 text-sm font-semibold">$25</span>
+              </div>
+              <p class="text-gray-600 text-xs mb-4">2,500 Robux</p>
+              <button onclick="openCheckout('Boosting: Nemesis to Arch', '$25 / 2,500 Robux')" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg text-sm font-medium transition-colors">Buy Now</button>
+            </div>
+          </div>
+          <!-- Boosting add-ons -->
+          <div class="bg-gray-900/30 border border-gray-800/40 rounded-xl p-6">
+            <h4 class="font-bold text-sm mb-3 text-gray-300">Boosting Add-ons</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+              <div class="flex items-center justify-between bg-gray-800/40 rounded-lg px-4 py-3">
+                <span class="text-gray-400">Clips</span>
+                <span class="text-purple-400 font-semibold">+15%</span>
+              </div>
+              <div class="flex items-center justify-between bg-gray-800/40 rounded-lg px-4 py-3">
+                <span class="text-gray-400">Duos</span>
+                <span class="text-purple-400 font-semibold">+20%</span>
+              </div>
+              <div class="flex items-center justify-between bg-gray-800/40 rounded-lg px-4 py-3">
+                <span class="text-gray-400">Same Day</span>
+                <span class="text-purple-400 font-semibold">+30%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <p class="text-purple-400 text-sm font-semibold tracking-widest uppercase mb-3">WHY US</p>
+          <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Why Choose Null?</h2>
+          <p class="text-gray-400 max-w-lg mx-auto">Premium configs, ready-to-go accounts, and fast rank boosting — everything you need in one place.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6 hover:border-purple-500/30 transition-colors">
+            <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 00-2 2v.18a2 2 0 01-1 1.73l-.43.25a2 2 0 01-2 0l-.15-.08a2 2 0 00-2.73.73l-.22.38a2 2 0 00.73 2.73l.15.1a2 2 0 011 1.72v.51a2 2 0 01-1 1.74l-.15.09a2 2 0 00-.73 2.73l.22.38a2 2 0 002.73.73l.15-.08a2 2 0 012 0l.43.25a2 2 0 011 1.73V20a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.22-.39a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.74v-.5a2 2 0 011-1.74l.15-.09a2 2 0 00.73-2.73l-.22-.38a2 2 0 00-2.73-.73l-.15.08a2 2 0 01-2 0l-.43-.25a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Top-Tier Configs</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Hand-tuned configs for the best internals and externals. Optimized settings for Kiciahook, Unnamed Enhancements, Matcha, Matrix, and more.</p>
+          </div>
+          <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6 hover:border-purple-500/30 transition-colors">
+            <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Fast Rank Boosting</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Reliable boosting from Unranked all the way to Arch Nemesis. Same-day options available.</p>
+          </div>
+          <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6 hover:border-purple-500/30 transition-colors">
+            <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Ready-Made Accounts</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Ranked-ready and aged accounts available instantly. No waiting, no hassle — just buy and play.</p>
+          </div>
+          <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6 hover:border-purple-500/30 transition-colors">
+            <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            </div>
+            <h3 class="text-lg font-bold mb-2">Always Updated</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Configs are updated with every game patch so you're never left behind. Stay ahead of the competition.</p>
+          </div>
+          <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6 hover:border-purple-500/30 transition-colors">
+            <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold mb-2">PayPal &amp; Robux</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Flexible payment options. Pay with PayPal or Robux — whatever works best for you.</p>
+          </div>
+          <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-6 hover:border-purple-500/30 transition-colors">
+            <div class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <h3 class="text-lg font-bold mb-2">24/7 Discord Support</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Active Discord community with fast support. Get help, ask questions, and claim your purchases easily.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 px-6">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-16">
+          <p class="text-purple-400 text-sm font-semibold tracking-widest uppercase mb-3">FAQ</p>
+          <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Frequently Asked Questions</h2>
+          <p class="text-gray-400 max-w-lg mx-auto">Got questions? We've got answers.</p>
+        </div>
+        <div class="space-y-4">
+          <details class="bg-gray-900/50 border border-gray-800/60 rounded-xl group">
+            <summary class="flex items-center justify-between cursor-pointer p-6 text-white font-semibold text-sm">
+              What payment methods do you accept?
+              <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="px-6 pb-6 text-gray-400 text-sm leading-relaxed">We accept PayPal and Robux. Robux payments are handled through our Discord server.</div>
+          </details>
+          <details class="bg-gray-900/50 border border-gray-800/60 rounded-xl group">
+            <summary class="flex items-center justify-between cursor-pointer p-6 text-white font-semibold text-sm">
+              How do I receive my config after purchase?
+              <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="px-6 pb-6 text-gray-400 text-sm leading-relaxed">After payment, join our Discord server and open a ticket with your proof of payment. Your config will be delivered directly to you.</div>
+          </details>
+          <details class="bg-gray-900/50 border border-gray-800/60 rounded-xl group">
+            <summary class="flex items-center justify-between cursor-pointer p-6 text-white font-semibold text-sm">
+              How does rank boosting work?
+              <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="px-6 pb-6 text-gray-400 text-sm leading-relaxed">Purchase your desired boost, then join our Discord and show proof of payment to claim it. You can choose add-ons like Clips, Duos, or Same Day delivery for an extra fee.</div>
+          </details>
+          <details class="bg-gray-900/50 border border-gray-800/60 rounded-xl group">
+            <summary class="flex items-center justify-between cursor-pointer p-6 text-white font-semibold text-sm">
+              Are configs updated when the game patches?
+              <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="px-6 pb-6 text-gray-400 text-sm leading-relaxed">Yes! We keep all configs up to date with every game patch so you're never left behind.</div>
+          </details>
+          <details class="bg-gray-900/50 border border-gray-800/60 rounded-xl group">
+            <summary class="flex items-center justify-between cursor-pointer p-6 text-white font-semibold text-sm">
+              Can I get a refund?
+              <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="px-6 pb-6 text-gray-400 text-sm leading-relaxed">All sales are final under our no-refund policy. If a product is faulty, we may offer a replacement — report any issues within 1 day of purchase.</div>
+          </details>
+          <details class="bg-gray-900/50 border border-gray-800/60 rounded-xl group">
+            <summary class="flex items-center justify-between cursor-pointer p-6 text-white font-semibold text-sm">
+              What internals and externals do you support?
+              <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="px-6 pb-6 text-gray-400 text-sm leading-relaxed">We currently offer configs for Kiciahook and Unnamed Enhancements (internals), and Matcha and Matrix (externals). More are being added regularly.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Community / CTA Section -->
+    <section class="py-24 px-6 text-center">
+      <div class="max-w-3xl mx-auto">
+        <p class="text-purple-400 text-sm font-semibold tracking-widest uppercase mb-3">COMMUNITY</p>
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Be One of the First</h2>
+        <p class="text-gray-400 max-w-xl mx-auto mb-10">
+          Null is brand new and we are looking for early supporters. Join our Discord to get exclusive deals, provide feedback, and shape the future of the platform.
+        </p>
+        <div class="flex items-center justify-center gap-4 flex-wrap">
+          <a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            Join Our Discord
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+          <a href="#features" class="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            View Features
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800/60 py-12 px-6">
+      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center font-bold text-sm">N</div>
+            <span class="text-xl font-bold text-purple-400">Null</span>
+          </div>
+          <p class="text-gray-500 text-sm leading-relaxed">A new Roblox software provider. Premium tools built for serious gamers.</p>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-300 mb-4">Quick Links</h4>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li><a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Discord</a></li>
+            <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
+            <li><a href="#shop" class="hover:text-white transition-colors">Shop</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-300 mb-4">Support</h4>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li><a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Discord</a></li>
+            <li><a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">FAQ</a></li>
+            <li><a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Contact Us</a></li>
+            <li><a href="https://discord.gg/7uKprDpnfJ" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Status Page</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold tracking-widest uppercase text-gray-300 mb-4">Legal</h4>
+          <ul class="space-y-2 text-sm text-gray-500">
+            <li><a href="#" onclick="showPage('terms'); return false;" class="hover:text-white transition-colors">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Refund Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="max-w-6xl mx-auto mt-10 pt-6 border-t border-gray-800/40 flex flex-col md:flex-row items-center justify-between text-sm text-gray-600">
+        <p>&copy; 2026 Null. All rights reserved.</p>
+        <p>Not affiliated with Roblox Corporation.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- TERMS OF SERVICE PAGE -->
+  <div id="page-terms" class="page">
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b border-gray-800/50" style="background: rgba(10,10,15,0.8); backdrop-filter: blur(12px);">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="#" onclick="showPage('home'); return false;" class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center font-bold text-sm">N</div>
+          <span class="text-xl font-bold text-purple-400">Null</span>
+        </a>
+        <div class="flex items-center gap-6">
+          <a href="#" onclick="showPage('home'); return false;" class="text-gray-300 hover:text-white transition-colors text-sm inline-flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="pt-32 pb-24 px-6">
+      <div class="max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Terms of Service</h1>
+        <p class="text-gray-500 text-sm mb-12">Last updated: February 2026</p>
+        <div class="space-y-10">
+          <div>
+            <h2 class="text-xl font-bold text-purple-400 mb-3">1. Agreement to Terms</h2>
+            <p class="text-gray-400 leading-relaxed">By purchasing or using our services, you agree to comply with these Terms of Service. If you do not agree to these terms, you must refrain from using our services. We reserve the right to update or modify these terms at any time, and any changes will be effective immediately upon posting.</p>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-purple-400 mb-3">2. Product Sales</h2>
+            <p class="text-gray-400 leading-relaxed">We are a retailer of digital products and sell only in accordance with these Terms. All sales are final, and by making a purchase, you acknowledge and accept these terms. Violating any terms may result in a permanent ban from the store and denial of future services.</p>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-purple-400 mb-3">3. No Refunds</h2>
+            <p class="text-gray-400 leading-relaxed">We operate under a strict no refund policy. If the product is found to be faulty, we may offer a replacement. You must report any issues related to non-working tokens or products within 1 day of purchase for a possible replacement.</p>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-purple-400 mb-3">4. Unauthorized Use</h2>
+            <p class="text-gray-400 leading-relaxed">You agree not to use our services for any illegal, malicious, or harmful purpose. Any misuse of our products may lead to suspension or termination of your account.</p>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-purple-400 mb-3">5. Product Integrity</h2>
+            <p class="text-gray-400 leading-relaxed">All of our digital products are created with random, non-personal data and do not contain any Personally Identifiable Information (PII). They are not linked to any real individual.</p>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-purple-400 mb-3">6. Zero Tolerance for Malicious Activity</h2>
+            <p class="text-gray-400 leading-relaxed">We have a zero-tolerance policy towards spam and malicious activity. You are solely responsible for how you use our products after purchase. Any attempt to misuse or exploit the products will result in immediate action, including potential bans from the service.</p>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-purple-400 mb-3">7. Compliance with Laws</h2>
+            <p class="text-gray-400 leading-relaxed">You agree to comply with all applicable local, national, and international laws while using our services. Any unlawful activity will result in immediate suspension of your access.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="border-t border-gray-800/60 py-8 px-6 text-center text-sm text-gray-600">
+      <p>&copy; 2026 Null. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    let currentItem = '';
+    let currentPrice = '';
+
+    function openCheckout(item, price) {
+      currentItem = item;
+      currentPrice = price;
+      document.getElementById('checkout-item').textContent = item;
+      document.getElementById('checkout-price').textContent = price;
+      document.getElementById('checkout-modal').classList.add('active');
+    }
+
+    function closeCheckout() {
+      document.getElementById('checkout-modal').classList.remove('active');
+    }
+
+    function payWithPaypal() {
+      // Extract dollar amount from price string for PayPal
+      const match = currentPrice.match(/\$[\d.]+/);
+      const amount = match ? match[0].replace('$','') : '5';
+      // Opens PayPal.me link with the correct amount
+      window.open('https://paypal.me/HookedByclauss/' + amount, '_blank');
+    }
+  </script>
+
+</body>
+</html>
